@@ -1,3 +1,7 @@
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using SurveyBasket.API.Services;
+using SurveyBasket.API.Middelwares;
 
 namespace SurvyBasket.API
 {
@@ -8,13 +12,19 @@ namespace SurvyBasket.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+
+            builder.Services.AddServicesConfigration(builder.Configuration);
+            builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+            builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+            {
+                builder.RegisterModule(new AutoFacModul());
+            });
+
 
             var app = builder.Build();
+        
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -22,7 +32,7 @@ namespace SurvyBasket.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseMiddleware<TransactionMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
