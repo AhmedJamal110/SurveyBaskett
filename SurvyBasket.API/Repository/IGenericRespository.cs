@@ -9,8 +9,8 @@ namespace SurveyBasket.API.Repository
         Task<bool> IsEntityExsit(Expression<Func<T, bool>> expression , CancellationToken cancellationToken = default);
         Task<T> AddAsync(T item , CancellationToken cancellationToken = default);
         Task UpdateAsync(T item , CancellationToken cancellationToken = default);
-        Task HardDelteAsync(T item , int id , CancellationToken cancellationToken = default);
-        Task SoftDelteAsync(T item , CancellationToken cancellationToken = default);
+        Task HardDelteAsync( int id , CancellationToken cancellationToken = default);
+        Task SoftDelteAsync(  int id , CancellationToken cancellationToken = default);
 
 
     }

@@ -40,6 +40,38 @@ namespace SurveyBasket.API.Controllers
             return result.IsFailure  ? BadRequest(result.Error) :  Ok(result.Value);
         }
 
+        [HttpPut("update-poll/{id}")]
+        public async Task<ActionResult> UpdatePoll([FromRoute] int id ,  PollViewModel model, CancellationToken cancellationToken)
+        {
+            var result = await _pollService.UpdatePoll(id , model, cancellationToken);
+
+
+            return result.IsFailure ? NotFound(result.Error) : NoContent();
+        }
+
+        [HttpDelete("hard-delete-poll/{id}")]
+        public async Task<ActionResult> HardDeletePoll([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            
+            var result = await _pollService.HardDeltePoll(id , cancellationToken)  ;
+
+            return result.IsFailure ? NotFound(result.Error) : NoContent();
+        }
+
+        [HttpDelete("soft-delete-poll/{id}")]
+        public async Task<ActionResult> SoftDeletePoll([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            var result = await _pollService.SoftDeltePoll(id, cancellationToken);
+            return result.IsFailure ? NotFound(result.Error) : NoContent();
+        }
+
+        [HttpPut("toggel/{id}")]
+        public async Task<ActionResult> ToggelStatus([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            var result = await _pollService.ToggelStatus(id, cancellationToken);
+
+            return result.IsFailure ? NotFound(result.Error) : NoContent();
+        }
 
     }
 }

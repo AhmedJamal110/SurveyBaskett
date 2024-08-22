@@ -41,6 +41,58 @@
 
             return Result.Success<PollDto>(result.Adapt<PollDto>());
         }
+        public async Task<Result> UpdatePoll(int id, PollViewModel model, CancellationToken cancellationToken = default)
+        {
+            var pollInDb = await _pollRepository.GetByIdAsync(id, cancellationToken);
+                 if (pollInDb is null)
+                         return Result.Failure(PollErrors.PollNotFound);
+
+            var isExsit = await _pollRepository.IsEntityExsit(x => x.Title == model.Title && x.ID != id, cancellationToken);
+            if (isExsit)
+                return Result.Failure(PollErrors.PollDeplucated);
+
+            pollInDb.Title = model.Title; 
+            pollInDb.Summary = model.Summary; 
+            pollInDb.StartsAt = model.StartsAt; 
+            pollInDb.EndsAt = model.EndsAt;
+             await _pollRepository.UpdateAsync(pollInDb, cancellationToken);
+
+            return Result.Success();
+        }
+
+        public async Task<Result> HardDeltePoll(int id, CancellationToken cancellationToken = default)
+        {
+            var poll = await _pollRepository.GetByIdAsync(id, cancellationToken);
+                   if (poll is null)
+                            return Result.Failure(PollErrors.PollNotFound);
+                
+              await _pollRepository.HardDelteAsync(id, cancellationToken);
+                
+            return Result.Success();
+        }
+
+        public async Task<Result> SoftDeltePoll(int id, CancellationToken cancellationToken = default)
+        {
+            var isExsit = await _pollRepository.IsEntityExsit(x => x.ID == id, cancellationToken);
+            if (!isExsit)
+                return Result.Failure(PollErrors.PollNotFound);
+
+             await _pollRepository.SoftDelteAsync(id, cancellationToken);
+
+
+            return Result.Success();
+        }
+
+        public async Task<Result> ToggelStatus(int id, CancellationToken cancellationToken = default)
+        {
+            var poll = await _pollRepository.GetByIdAsync(id, cancellationToken);
+            if(poll is null )
+                return Result.Failure(PollErrors.PollNotFound);
+            poll.IsPublished = !poll.IsPublished;
+           
+            return Result.Success();
+        }
+
 
 
 

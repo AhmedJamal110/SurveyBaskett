@@ -25,18 +25,23 @@ namespace SurveyBasket.API.Repository
 
         public async Task<T?> GetByIdAsync(int id , CancellationToken cancellationToken = default)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(x => x.ID == id);
+            return await _context.Set<T>()
+                                           .AsNoTracking()
+                                           .FirstOrDefaultAsync(x => x.ID == id && x.IsDelated == false , cancellationToken);
         }
 
-        public async Task HardDelteAsync(T item , int id , CancellationToken cancellationToken = default)
+        public async Task  HardDelteAsync(int id ,  CancellationToken cancellationToken = default)
         {
-             await _context.Set<T>().Where(x => x.ID == id).ExecuteDeleteAsync();
+            await _context.Set<T>().Where(x => x.ID == id).ExecuteDeleteAsync(cancellationToken: cancellationToken);
+
         }
 
 
-        public Task SoftDelteAsync(T item , CancellationToken cancellationToken = default)
+        public async Task SoftDelteAsync(int id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await _context.Set<T>()
+            .Where(x => x.ID == id)
+            .ExecuteUpdateAsync(x => x.SetProperty(p => p.IsDelated, true), cancellationToken: cancellationToken);
         }
 
 
@@ -45,9 +50,11 @@ namespace SurveyBasket.API.Repository
             return await _context.Set<T>().AnyAsync(expression);
         }
 
-        public Task UpdateAsync(T item , CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
+        public Task UpdateAsync(T item, CancellationToken cancellationToken = default)
+        { 
+             _context.Set<T>().Update(item);
+            return Task.CompletedTask;
         }
+        
     }
 }
