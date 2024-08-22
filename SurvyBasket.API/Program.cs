@@ -32,6 +32,8 @@ namespace SurvyBasket.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionMiddelware>();
             app.UseMiddleware<TransactionMiddleware>();
             app.UseHttpsRedirection();
 
