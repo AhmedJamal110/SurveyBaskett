@@ -1,6 +1,7 @@
-﻿namespace SurveyBasket.API.Persistence
+﻿
+namespace SurveyBasket.API.Persistence
 {
-    public class ApplicationDbContect : DbContext
+    public class ApplicationDbContect : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContect(DbContextOptions<ApplicationDbContect> option) : base(option)
         {

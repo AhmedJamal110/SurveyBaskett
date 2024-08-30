@@ -2,6 +2,8 @@
 global using Microsoft.EntityFrameworkCore;
 global using FluentValidation;
 global using FluentValidation.AspNetCore;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Mapster;
 global using MapsterMapper;
 

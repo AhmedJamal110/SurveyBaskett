@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using SurveyBasket.API.JwtService;
 using SurveyBasket.API.Services;
 using Module = Autofac.Module;
 
@@ -10,7 +11,8 @@ namespace SurveyBasket.API.Extensions
         {
             builder.RegisterGeneric(typeof(GenericRespository<>)).As(typeof(IGenericRespository<>)).InstancePerLifetimeScope();
             builder.RegisterType(typeof(PollService)).AsImplementedInterfaces().InstancePerLifetimeScope();
-
+            builder.RegisterType(typeof(JwtProvider)).AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType(typeof(AuthService)).AsImplementedInterfaces().InstancePerLifetimeScope();
         }
     }
 }
