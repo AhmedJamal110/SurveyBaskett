@@ -28,8 +28,23 @@ namespace SurveyBasket.API.Controllers
         {
             var result = await _authService.GetTokenForUserAsync(model.Email, model.Password, cancellationToken);
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
-        } 
-    
-    
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult> RefreshToken( RefreshTokenViewModel model ,CancellationToken cancellationToken)
+        {
+            var result = await _authService.GetRefreshTokenAsync(model.Token, model.RefreshToken, cancellationToken);
+
+            return result .IsFailure? BadRequest(result.Error) : Ok(result.Value);
+        }
+
+        [HttpPut("revok-refresh-token")]
+        public async Task<ActionResult> RevokedOnToken(RefreshTokenViewModel model, CancellationToken cancellationToken)
+        {
+            var result = await _authService.RevokedOnRefreshTokenAsync(model.Token, model.RefreshToken, cancellationToken);
+
+            return result.IsSuccess ? Ok() :  BadRequest(result.Error);
+        }
+
     }
 }
