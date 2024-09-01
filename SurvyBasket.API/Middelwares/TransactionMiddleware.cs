@@ -1,4 +1,6 @@
-﻿namespace SurveyBasket.API.Middelwares
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace SurveyBasket.API.Middelwares
 {
     public class TransactionMiddleware
     {
@@ -11,6 +13,7 @@
     
         public async Task InvokeAsync(HttpContext httpContext , ApplicationDbContect context)
         {
+
             var method = httpContext.Request.Method.ToUpper();
             if(method == "POST" || method ==  "PUT" || method == "DELETE")
             {

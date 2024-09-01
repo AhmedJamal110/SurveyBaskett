@@ -6,6 +6,7 @@ namespace SurveyBasket.API.Repository
     {
         IQueryable<T> GetAllAsync(CancellationToken cancellationToken = default );
         Task<T?> GetByIdAsync(int id , CancellationToken cancellationToken = default);
+        //Task<T?> GetByIdWithSpecfic(int id , Expression<Func<T, bool>> expression , CancellationToken cancellationToken = default);
         Task<bool> IsEntityExsit(Expression<Func<T, bool>> expression , CancellationToken cancellationToken = default);
         Task<T> AddAsync(T item , CancellationToken cancellationToken = default);
         Task UpdateAsync(T item , CancellationToken cancellationToken = default);

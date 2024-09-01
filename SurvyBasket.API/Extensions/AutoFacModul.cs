@@ -13,6 +13,8 @@ namespace SurveyBasket.API.Extensions
             builder.RegisterType(typeof(PollService)).AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType(typeof(JwtProvider)).AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType(typeof(AuthService)).AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType(typeof(QuestionServices)).AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType(typeof(UnitOfWork)).AsImplementedInterfaces().InstancePerLifetimeScope();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SurveyBasket.API.Services;
 
@@ -6,6 +7,7 @@ namespace SurveyBasket.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PollsController : ControllerBase
     {
         private readonly IPollService _pollService;
@@ -37,7 +39,9 @@ namespace SurveyBasket.API.Controllers
             var result = await _pollService.AddPoll( model, cancellationToken);
            
 
-            return result.IsFailure  ? BadRequest(result.Error) :  Ok(result.Value);
+            return result.IsSuccess  
+                ? Ok(result.Value)
+                : result.ToProblem(StatusCodes.Status400BadRequest);
         }
 
         [HttpPut("update-poll/{id}")]
@@ -45,8 +49,12 @@ namespace SurveyBasket.API.Controllers
         {
             var result = await _pollService.UpdatePoll(id , model, cancellationToken);
 
+            if (result.IsSuccess)
+                return NoContent();
 
-            return result.IsFailure ? NotFound(result.Error) : NoContent();
+            return result.Error.Equals(PollErrors.PollDeplucated)
+                ? result.ToProblem(StatusCodes.Status404NotFound)
+                : result.ToProblem(StatusCodes.Status409Conflict);
         }
 
         [HttpDelete("hard-delete-poll/{id}")]
@@ -55,7 +63,7 @@ namespace SurveyBasket.API.Controllers
             
             var result = await _pollService.HardDeltePoll(id , cancellationToken)  ;
 
-            return result.IsFailure ? NotFound(result.Error) : NoContent();
+            return result.IsFailure ? result.ToProblem(StatusCodes.Status404NotFound) : NoContent();
         }
 
         [HttpDelete("soft-delete-poll/{id}")]
@@ -70,7 +78,7 @@ namespace SurveyBasket.API.Controllers
         {
             var result = await _pollService.ToggelStatus(id, cancellationToken);
 
-            return result.IsFailure ? NotFound(result.Error) : NoContent();
+            return result.IsFailure ? result.ToProblem(StatusCodes.Status404NotFound) : NoContent();
         }
 
     }
